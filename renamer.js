@@ -1,18 +1,17 @@
 var fs = require('fs')
 
-function processFile(filepath) {
 
-	if(filepath.indexOf('_Web_0') === -1) {
+let oldPart = '-(1)-'
+let newPart = '-'
+
+
+function processFile(filepath) {
+	if(filepath.indexOf(oldPart) === -1) {
 		return;
 	}
-
-	var newName = filepath.replace('_Web_0', '');
-
-	newName = newName.replace('./', './champions_');
-	
-	console.log(filepath, '->', newName);
-
-	fs.rename(filepath, newName, function (err) {
+	var newFilepath = filepath.replace(oldPart, newPart);
+	console.log(filepath, '->', newFilepath);
+	fs.rename(filepath, newFilepath, function (err) {
   		if (err) throw err;
   		console.log('renamed complete');
 	});
@@ -21,9 +20,8 @@ function processFile(filepath) {
 
 function getFiles (dir) {
 	var files = fs.readdirSync(dir);
-
 	files.forEach(function(file) {
-		var name = dir + '/' + file;
+		var name = dir + file;
 		if (fs.statSync(name).isDirectory()) {
 			getFiles(name);
 		} else {
@@ -31,6 +29,5 @@ function getFiles (dir) {
 		}
 	})
 }
-
 
 getFiles('.')
